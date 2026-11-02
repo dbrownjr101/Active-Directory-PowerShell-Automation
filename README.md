@@ -1,49 +1,53 @@
-# Active-Directory-PowerShell-Automation
-ctive Directory Group Policy (GPO) Setup
+Active Directory Bulk User Provisioning & Department OU Creation
 
-This project covers setting up Group Policy Objects (GPOs) across department OUs in a Windows Server lab (Oscorp.com). Following the user provisioning setup from Part 1, this lab focuses on applying security policies and restricting access using the Group Policy Management Console (GPMC).
+This project covers automating bulk user onboarding and dynamic department OU creation in a Windows Server lab. Instead of manually clicking through Active Directory Users and Computers (ADUC) to create accounts, these PowerShell scripts handle dataset generation, target OU checks, account creation, and environment cleanup.
+
+📹 Video Demonstration
+
+https://youtu.be/pyHvQa-PsiA 
 
 🛠️ What Was Done
 
-Created Department GPOs: Built custom GPOs for each department (GPO_Finance_Policy, GPO_IT_Policy, etc.).
+Dataset Generation (GenerateCSV.ps1): Built a script to create a mock dataset of 150 employees (users.csv) distributed across five departments (IT, Finance, HR, Sales, and Marketing).
 
-Linked GPOs to OUs: Linked each policy directly to its department OU (Finance, IT, HR, Sales, Marketing) so the settings apply to every user inside that container.
+Dynamic Provisioning (CreateUsers.ps1): Script reads the CSV file, checks if the target department OUs exist under DC=Oscorp,DC=com, creates any missing OUs on the fly, and provisions each account into its designated department container.
 
-Configured Policy Rules: Set up Administrative Templates to enforce security rules, like blocking Control Panel access for the Finance department.
-
-Verified Enforcement: Checked the Group Policy Management Console to confirm policy links were active and working correctly.
-
-🔒 Setup Summary
+🔒 Configuration Summary
 
 Domain: Oscorp.com
 
 Department OUs: IT, Finance, HR, Sales, Marketing
 
-Management Tool: gpmc.msc
+Default Password: Welcome123!
 
-Example Policy Applied: User Configuration > Administrative Templates > Control Panel > Prohibit access to Control Panel and PC settings (Enabled for Finance)
+Password Policy: Forces password reset on first login (-ChangePasswordAtLogon $true)
 
 📋 Prerequisites
 
-Windows Server running as Domain Controller for Oscorp.com
+• Windows Server running as a Domain Controller for Oscorp.com
 
-Active Directory Domain Services & Group Policy Management installed
+• Active Directory Domain Services (AD DS) installed
 
-Administrator access
+• PowerShell Active Directory module
 
-🚀 How to Replicate
+• Administrator access
 
-Open Group Policy Management (gpmc.msc).
+🚀 How to Run
 
-Navigate to Domains > Oscorp.com.
+1. Generate the CSV file
 
-Right-click a department OU (e.g., Finance) and select Create a GPO in this domain, and Link it here...
+Creates users.csv at C:\Scripts\users.csv:
 
-Name the policy GPO_Finance_Policy.
+.\scripts\GenerateCSV.ps1
 
-Right-click the new GPO and select Edit.
 
-Navigate to the setting you want to change, enable it, and close the editor.
+2. Run the provisioning script
+
+Creates missing department OUs and provisions user accounts:
+
+.\scripts\CreateUsers.ps1
+
+
 
 👤 Author
 
